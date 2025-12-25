@@ -87,7 +87,13 @@ export function applySort(pnodes: PNode[], sort?: PNodeSortOptions): PNode[] {
     let comparison = 0;
     switch (sort.field) {
       case "status":
-        const statusOrder = { online: 0, syncing: 1, degraded: 2, offline: 3 };
+        const statusOrder: Record<string, number> = {
+          online: 0,
+          syncing: 1,
+          degraded: 2,
+          offline: 3,
+          unknown: 4,
+        };
         comparison = statusOrder[a.status] - statusOrder[b.status];
         break;
       case "uptime":
