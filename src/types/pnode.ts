@@ -136,3 +136,9 @@ export interface PNodeFilters {
   country?: string[];
   search?: string;
 }
+
+// Sort options
+export interface PNodeSortOptions {
+  field: "status" | "uptime" | "stake" | "responseTime" | "storage" | "name";
+  order: "asc" | "desc";
+}
