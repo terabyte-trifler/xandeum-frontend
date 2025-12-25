@@ -107,3 +107,57 @@ export function applySort(pnodes: PNode[], sort?: PNodeSortOptions): PNode[] {
 
   return sorted;
 }
+
+import type { ClusterStats, PaginatedResponse } from "@/types/pnode";
+
+/**
+ * Fetch paginated pNodes list
+ */
+export async function fetchPNodes(
+  filters?: PNodeFilters,
+  sort?: PNodeSortOptions,
+  page: number = 1,
+  pageSize: number = 20
+): Promise<PaginatedResponse<PNode>> {
+  // In production, this would call the pRPC endpoint
+  // For now, return mock data structure
+  const allNodes = await prpcRequest<PNode[]>("getPNodes");
+
+  let filtered = applyFilters(allNodes, filters);
+  filtered = applySort(filtered, sort);
+
+  const start = (page - 1) * pageSize;
+  const items = filtered.slice(start, start + pageSize);
+
+  return {
+    items,
+    total: filtered.length,
+    page,
+    pageSize,
+    hasMore: start + pageSize < filtered.length,
+  };
+}
+
+/**
+ * Fetch cluster statistics
+ */
+export async function fetchClusterStats(): Promise<ClusterStats> {
+  return prpcRequest<ClusterStats>("getClusterStats");
+}
+
+/**
+ * Network health response type
+ */
+export interface NetworkHealth {
+  status: "healthy" | "degraded" | "unhealthy";
+  latency: number;
+  blockHeight: number;
+  peerCount: number;
+}
+
+/**
+ * Fetch network health
+ */
+export async function fetchNetworkHealth(): Promise<NetworkHealth> {
+  return prpcRequest<NetworkHealth>("getNetworkHealth");
+}

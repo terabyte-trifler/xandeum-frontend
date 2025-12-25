@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { config } from '@/config';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { config } from "@/config";
 import {
   fetchPNodes,
   fetchClusterStats,
   fetchNetworkHealth,
-} from '@/services/api';
-import type { PNodeFilters, PNodeSortOptions } from '@/types';
+} from "@/services/api";
+import type { PNodeFilters, PNodeSortOptions } from "@/types/pnode";
 
 // Query Keys for cache management
 export const queryKeys = {
-  pnodes: (filters?: PNodeFilters, sort?: PNodeSortOptions, page?: number) => 
-    ['pnodes', filters, sort, page] as const,
-  pnode: (pubkey: string) => ['pnode', pubkey] as const,
-  clusterStats: ['clusterStats'] as const,
-  epochInfo: ['epochInfo'] as const,
-  networkHealth: ['networkHealth'] as const,
-  chartData: ['chartData'] as const,
+  pnodes: (filters?: PNodeFilters, sort?: PNodeSortOptions, page?: number) =>
+    ["pnodes", filters, sort, page] as const,
+  pnode: (pubkey: string) => ["pnode", pubkey] as const,
+  clusterStats: ["clusterStats"] as const,
+  epochInfo: ["epochInfo"] as const,
+  networkHealth: ["networkHealth"] as const,
+  chartData: ["chartData"] as const,
 };
 
 /**
@@ -69,11 +69,11 @@ export function useNetworkHealth() {
  */
 export function useRefreshAll() {
   const queryClient = useQueryClient();
-  
+
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.clusterStats });
     queryClient.invalidateQueries({ queryKey: queryKeys.epochInfo });
     queryClient.invalidateQueries({ queryKey: queryKeys.networkHealth });
-    queryClient.invalidateQueries({ queryKey: ['pnodes'] });
+    queryClient.invalidateQueries({ queryKey: ["pnodes"] });
   };
 }
